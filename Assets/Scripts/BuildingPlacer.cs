@@ -8,6 +8,7 @@ public class BuildingPlacer : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
 	//Variables
+    public static bool placing = true;
     public Building placement;
 
     void Start(){
@@ -39,9 +40,16 @@ public class BuildingPlacer : MonoBehaviour
     /// </summary>
     private bool placeBuilding(){
 
-        if(validPlacement())
+        //If the tile is valid for placement and enough resources to build, then place the building
+        if(validPlacement() && ResourceManager.instance.canAfford(placement))
         {
             Building b = Instantiate(placement, transform.position, Quaternion.identity);
+
+            //Subtract costs
+            ResourceManager.Resource r = ResourceManager.Resource.WOOD;
+            ResourceManager.instance.changeResourceAmount(r, b.woodCost);
+            r = ResourceManager.Resource.GOLD;
+            ResourceManager.instance.changeResourceAmount(r, b.goldCost);
 
             //To preserve correct layering must change size instead of increasing y pos, as this changes the layering calue
             Vector2 pos = mouseToTile();
@@ -58,7 +66,7 @@ public class BuildingPlacer : MonoBehaviour
 
 
     /// <summary>
-    /// Assesses if the current tile can have a building placewd onto it
+    /// Assesses if the current tile can have a building placed onto it
     /// </summary>
     private bool validPlacement(){
 
@@ -73,10 +81,22 @@ public class BuildingPlacer : MonoBehaviour
     {
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        float roundXPos = Mathf.Round(pos.x / (WorldGen.tileWidth * 2)) * (WorldGen.tileWidth * 2); //Times 2 to account for isometric view (otherwise snaps inbetween tiles)
-        float roundYPos = Mathf.Round(pos.y / (WorldGen.tileHeight * 2)) * (WorldGen.tileHeight * 2);
+        pos.y += WorldGen.tileHeight*3;
+
+        float roundXPos = Mathf.Round(pos.x / (WorldGen.tileWidth * 1)) * (WorldGen.tileWidth * 1); //Times 2 to account for isometric view (otherwise snaps inbetween tiles)
+        float roundYPos = Mathf.Round(pos.y / (WorldGen.tileHeight * 1)) * (WorldGen.tileHeight * 1);
+        //Debug.Log(roundYPos % 0.16);
+        if ((Mathf.Abs(roundYPos % 0.16f) > 0.078 && Mathf.Abs(roundYPos % 0.16f) < 0.081) && !(Mathf.Abs(roundXPos % 0.32f) > 0.158 && Mathf.Abs(roundXPos % 0.32f) < 0.161))
+        {
+            roundYPos += 0.08f;
+        }
+        else if (!(Mathf.Abs(roundYPos % 0.16f) > 0.078 && Mathf.Abs(roundYPos % 0.16f) < 0.081) && (Mathf.Abs(roundXPos % 0.32f) > 0.158 && Mathf.Abs(roundXPos % 0.32f) < 0.161))
+        {
+            roundYPos += 0.08f;
+        }
 
         return new Vector2(roundXPos, roundYPos);
+        //return new Vector2(pos.x, pos.y);
     }
 
     /// <summary>
@@ -96,10 +116,13 @@ public class BuildingPlacer : MonoBehaviour
 
     void Update ()
     {
-        //Update position of the placement to snap to a tile
-        transform.position = roundToTile();
+        if(placing)
+        {
+            //Update position of the placement to snap to a tile
+            transform.position = roundToTile();
 
-        //Call input every frame
-        input();
+            //Call input every frame
+            input();
+        }
     }
 }

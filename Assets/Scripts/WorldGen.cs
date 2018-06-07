@@ -20,6 +20,8 @@ public class WorldGen : MonoBehaviour {
     //World Variables
     public float seed = 1;
     public float waterLevel = 0.3f;
+    [Tooltip("Larger values reduce the height difference between tiles")]
+    public int heightDamp = 10;
 
     //Tile Size
     public static float tileWidth = 0.16f;
@@ -42,9 +44,9 @@ public class WorldGen : MonoBehaviour {
     {
         float noise = Mathf.PerlinNoise(seed + pos.x, seed + pos.y);
 
-        return (noise - waterLevel) / 5;
+        return (noise - waterLevel) / heightDamp;
     }
-	
+
     [ContextMenu("Generate")]
 	public void generate()
     {

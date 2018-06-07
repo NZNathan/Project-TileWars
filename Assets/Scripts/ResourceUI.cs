@@ -6,7 +6,7 @@ public class ResourceUI : MonoBehaviour
 {
 
 	//Variables
-    [Tooltip("FOOD, WOOD, and GOLD amounts")]
+    [Tooltip("FOOD, WOOD, GOLD, and POPULATION amounts")]
     public Text[] resoruceAmountTextboxes;
 
     [Tooltip("FOOD, WOOD, and GOLD incomes")]
@@ -26,17 +26,21 @@ public class ResourceUI : MonoBehaviour
 
             resoruceAmountTextboxes[i].text = "" + amounts[i];
 
-            int income = incomes[i] - upkeeps[i];
-            resoruceIncomeTextboxes[i].text = "" + income;
+            //Only update income for first 3 resources
+            if(i < 3){
 
-            //Update Text color is losing resource
-            if(income < 0)
-            {
-                resoruceIncomeTextboxes[i].color = Color.red;
-            }
-            else
-            {
-                resoruceIncomeTextboxes[i].color = Color.green;
+                int income = incomes[i] - upkeeps[i];
+                resoruceIncomeTextboxes[i].text = "" + income;
+
+                //Update Text color is losing resource
+                if(income < 0)
+                {
+                    resoruceIncomeTextboxes[i].color = Color.red;
+                }
+                else
+                {
+                    resoruceIncomeTextboxes[i].color = Color.green;
+                }
             }
         }
     }

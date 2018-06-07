@@ -5,12 +5,21 @@ public abstract class Building : MonoBehaviour
 {
 
 	//Components
-    private SpriteRenderer spriteRenderer;
+    protected SpriteRenderer spriteRenderer;
+
+    //Cost Variables
+    public int woodCost = 0;
+    public int goldCost = 0;
 
     void Start(){
 
     	spriteRenderer = GetComponent<SpriteRenderer>();
     }
+
+    /// <summary>
+    /// Actions to be taken once the building has been built
+    /// </summary>
+    public abstract void built();
 
 
     #region Getters

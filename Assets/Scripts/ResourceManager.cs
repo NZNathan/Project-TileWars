@@ -4,7 +4,7 @@ using System.Collections;
 public class ResourceManager : MonoBehaviour
 {
 
-    public enum Resource {FOOD, WOOD, GOLD};
+    public enum Resource {FOOD, WOOD, GOLD, POPULATION};
 
     //Singleton
     public static ResourceManager instance;
@@ -31,7 +31,7 @@ public class ResourceManager : MonoBehaviour
 
         resourceUI = GetComponent<ResourceUI>();
 
-    	resourceAmount = new int[3];
+    	resourceAmount = new int[4];
         resourceBaseIncome = new int[3];
         resourceUpkeep = new int[3];
 
@@ -48,8 +48,52 @@ public class ResourceManager : MonoBehaviour
         resourceAmount[1] += resourceBaseIncome[1] - resourceUpkeep[1]; //WOOD income
         resourceAmount[2] += resourceBaseIncome[2] - resourceUpkeep[2]; //GOLD income
 
+        //Update the UI
         resourceUI.updateText(resourceAmount, resourceBaseIncome, resourceUpkeep);
     }
+
+    /// <summary>
+    /// Returns true if there is enough resources to build th ebuilding passed in
+    /// </summary>
+    public bool canAfford(Building b){
+
+        int woodCost = b.woodCost;
+        int goldCost = b.goldCost;
+
+    }
+
+    #region Setters
+    /// <summary>
+    /// Takes a resource enum and adds/minus' the change to its total amount (can NOT go into negatives)
+    /// </summary>
+    public bool changeResourceAmount(Resource resource, int change){
+
+        //Total amount can not be less than 0
+            return false;
+        }
+
+        resourceAmount[(int)resource] += change;
+    }
+
+    /// <summary>
+    /// Takes a resource enum and adds/minus' the change to its base income (can go into negatives)
+    /// </summary>
+    public void changeResourceBaseIncome(Resource resource, int change){
+        resourceBaseIncome[(int)resource] += change;
+    }
+
+    /// <summary>
+    /// Takes a resource enum and adds/minus' the change to its upkeep (can NOT go into negatives)
+    /// </summary>
+    public bool changeResourceUpkeep(Resource resource, int change){
+
+        //Upkeep can not be less than 0
+            return false;
+        }
+
+        resourceUpkeep[(int)resource] += change;
+    }
+    #endregion
 
 
     #region Getters

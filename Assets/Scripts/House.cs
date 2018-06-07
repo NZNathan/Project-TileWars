@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A house increases population increasing productivity and possible army size
+/// </summary>
 public class House : Building {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+	[Tooltip("Amount to increase population by when built")]
+	public int capacity = 5;
+
+	public override void built(){
+
+
 	}
 }
