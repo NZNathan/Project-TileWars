@@ -7,10 +7,12 @@ public class WorldGen : MonoBehaviour {
     //Singleton
     public static WorldGen instance;
 
-    //Tiles
     [Header("Tiles")]
     public GameObject grassTile;
     public GameObject waterTile;
+
+    [Header("Environment")]
+    public GameObject forest;
 
     //World Size
     [Header("World Size")]
@@ -22,6 +24,7 @@ public class WorldGen : MonoBehaviour {
     public float waterLevel = 0.3f;
     [Tooltip("Larger values reduce the height difference between tiles")]
     public int heightDamp = 10;
+    public float forestLevel = 0.3f;
 
     //Tile Size
     public static float tileWidth = 0.16f;
@@ -32,6 +35,7 @@ public class WorldGen : MonoBehaviour {
 
         instance = this;
 
+        seed = Random.Range(0f, 100000f);
         generate();
     }
 
@@ -68,6 +72,14 @@ public class WorldGen : MonoBehaviour {
                 if (noise > waterLevel)
                 {
                     tile = Instantiate(grassTile, pos, Quaternion.identity, this.transform);
+
+                    float bioVal = Mathf.PerlinNoise(seed + pos.x + 10000, seed + pos.y + 10000);
+
+                    if (bioVal <= forestLevel)
+                    {
+                        GameObject forestSpot = Instantiate(forest, pos, Quaternion.identity, this.transform);
+                        forestSpot.GetComponent<SpriteRenderer>().size += new Vector2(0, getNoiseHeight(pos));
+                    }
                 }
                 else
                 {

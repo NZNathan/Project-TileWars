@@ -30,16 +30,17 @@ public class ResourceUI : MonoBehaviour
             if(i < 3){
 
                 int income = incomes[i] - upkeeps[i];
-                resoruceIncomeTextboxes[i].text = "" + income;
 
                 //Update Text color is losing resource
                 if(income < 0)
                 {
                     resoruceIncomeTextboxes[i].color = Color.red;
+                    resoruceIncomeTextboxes[i].text = "" + income;
                 }
                 else
                 {
                     resoruceIncomeTextboxes[i].color = Color.green;
+                    resoruceIncomeTextboxes[i].text = "+" + income;
                 }
             }
         }
