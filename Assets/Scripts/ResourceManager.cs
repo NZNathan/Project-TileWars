@@ -60,6 +60,7 @@ public class ResourceManager : MonoBehaviour
         int woodCost = b.woodCost;
         int goldCost = b.goldCost;
 
+        return resourceAmount[1] - woodCost >= 0 && resourceAmount[2] - goldCost >= 0;
     }
 
     #region Setters
@@ -69,10 +70,12 @@ public class ResourceManager : MonoBehaviour
     public bool changeResourceAmount(Resource resource, int change){
 
         //Total amount can not be less than 0
+        if(resourceAmount[(int)resource] + change < 0){
             return false;
         }
 
         resourceAmount[(int)resource] += change;
+        return true;
     }
 
     /// <summary>
@@ -88,10 +91,12 @@ public class ResourceManager : MonoBehaviour
     public bool changeResourceUpkeep(Resource resource, int change){
 
         //Upkeep can not be less than 0
+        if(resourceUpkeep[(int)resource] + change < 0){
             return false;
         }
 
         resourceUpkeep[(int)resource] += change;
+        return true;
     }
     #endregion
 

@@ -12,6 +12,7 @@ public class House : Building {
 
 	public override void built(){
 
+		ResourceManager.instance.changeResourceAmount(ResourceManager.Resource.POPULATION, capacity);
 
 	}
 }
