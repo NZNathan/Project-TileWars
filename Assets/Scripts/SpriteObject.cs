@@ -23,7 +23,7 @@ public class SpriteObject : MonoBehaviour {
     {
         Color newColor = spriteRenderer.color;
         newColor.a = alpha;
-        
+
         spriteRenderer.color = newColor;
 
         //Update children
@@ -37,7 +37,6 @@ public class SpriteObject : MonoBehaviour {
     void Update()
     {
         spriteRenderer.sortingOrder = (int)((transform.position.y * 100) * -1 + layerOffset);
-        
     }
 
 }

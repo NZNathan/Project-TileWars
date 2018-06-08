@@ -121,6 +121,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 64605454}
+  - component: {fileID: 64605455}
   - component: {fileID: 64605453}
   m_Layer: 0
   m_Name: Generator
@@ -144,7 +145,7 @@ MonoBehaviour:
   waterTile: {fileID: 1772470972329758, guid: 8fd291dd26cd9fd43b08c6c397e84eee, type: 2}
   forest: {fileID: 1901165879136246, guid: 40335c5bba3497645926270b228a009d, type: 2}
   width: 20
-  height: 20
+  height: 10
   seed: 0
   waterLevel: 0.2
   heightDamp: 20
@@ -162,6 +163,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &64605455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 64605452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f21007ba4a63cd49820d8da3be5c962, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &215139087
 GameObject:
   m_ObjectHideFlags: 0
@@ -766,6 +778,12 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 114008468478927242, guid: 340669df368af7949b3388062ea0dbb7,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2db96aa1aa22c4a438cd9a3e8fe31e3e,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 340669df368af7949b3388062ea0dbb7, type: 2}
   m_IsPrefabParent: 0
@@ -887,6 +905,12 @@ Prefab:
       propertyPath: m_Name
       value: ResourceWindow (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 114008468478927242, guid: 340669df368af7949b3388062ea0dbb7,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: fcd50775bd766194b9fbb2ce1d18cfa8,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 340669df368af7949b3388062ea0dbb7, type: 2}
   m_IsPrefabParent: 0
@@ -1414,6 +1438,12 @@ Prefab:
       propertyPath: m_Name
       value: ResourceWindow (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 114008468478927242, guid: 340669df368af7949b3388062ea0dbb7,
+        type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4d7038b875347cb458225e595c6f6829,
+        type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 340669df368af7949b3388062ea0dbb7, type: 2}
   m_IsPrefabParent: 0

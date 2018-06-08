@@ -1,10 +1,10 @@
 using UnityEngine;
 using System.Collections;
 
+public enum Resource { FOOD, WOOD, GOLD, POPULATION };
+
 public class ResourceManager : MonoBehaviour
 {
-
-    public enum Resource {FOOD, WOOD, GOLD, POPULATION};
 
     //Singleton
     public static ResourceManager instance;
@@ -36,7 +36,7 @@ public class ResourceManager : MonoBehaviour
         resourceUpkeep = new int[3];
 
         //Setup the process income function to run every tick
-        InvokeRepeating("processIncome", tick, tick);
+        InvokeRepeating("processIncome", tick, tick); //REPACE WITH COROUTINE
     }
 
     /// <summary>

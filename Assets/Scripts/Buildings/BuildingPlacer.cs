@@ -46,9 +46,9 @@ public class BuildingPlacer : MonoBehaviour
             Building b = Instantiate(placement, transform.position, Quaternion.identity);
 
             //Subtract costs
-            ResourceManager.Resource r = ResourceManager.Resource.WOOD;
+            Resource r = Resource.WOOD;
             ResourceManager.instance.changeResourceAmount(r, b.woodCost);
-            r = ResourceManager.Resource.GOLD;
+            r = Resource.GOLD;
             ResourceManager.instance.changeResourceAmount(r, b.goldCost);
 
             //To preserve correct layering must change size instead of increasing y pos, as this changes the layering calue
@@ -56,6 +56,7 @@ public class BuildingPlacer : MonoBehaviour
 
             float noise = WorldGen.instance.getNoiseHeight(pos);
 
+            b.built();
             b.transform.position = new Vector2(pos.x, pos.y);
             b.GetComponent<SpriteRenderer>().size += new Vector2(0, noise);
             return true;
@@ -77,14 +78,14 @@ public class BuildingPlacer : MonoBehaviour
     /// Rounds the mouse Pos to the closest tile
     /// </summary>
     /// <returns></returns>
-    private Vector2 mouseToTile()
+    public static Vector2 mouseToTile()
     {
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        pos.y += WorldGen.tileHeight*3;
+        pos.y += WorldGen.tileHalfHeight*3;
 
-        float roundXPos = Mathf.Round(pos.x / (WorldGen.tileWidth * 1)) * (WorldGen.tileWidth * 1); //Times 2 to account for isometric view (otherwise snaps inbetween tiles)
-        float roundYPos = Mathf.Round(pos.y / (WorldGen.tileHeight * 1)) * (WorldGen.tileHeight * 1);
+        float roundXPos = Mathf.Round(pos.x / (WorldGen.tileHalfWidth * 1)) * (WorldGen.tileHalfWidth * 1); //Times 2 to account for isometric view (otherwise snaps inbetween tiles)
+        float roundYPos = Mathf.Round(pos.y / (WorldGen.tileHalfHeight * 1)) * (WorldGen.tileHalfHeight * 1);
         //Debug.Log(roundYPos % 0.16);
         if ((Mathf.Abs(roundYPos % 0.16f) > 0.078 && Mathf.Abs(roundYPos % 0.16f) < 0.081) && !(Mathf.Abs(roundXPos % 0.32f) > 0.158 && Mathf.Abs(roundXPos % 0.32f) < 0.161))
         {
@@ -119,7 +120,10 @@ public class BuildingPlacer : MonoBehaviour
         if(placing)
         {
             //Update position of the placement to snap to a tile
-            transform.position = roundToTile();
+            if (WorldManager.instance.onMap(mouseToTile()))
+            {
+                transform.position = roundToTile();
+            }
 
             //Call input every frame
             input();

@@ -27,13 +27,19 @@ public class WorldGen : MonoBehaviour {
     public float forestLevel = 0.3f;
 
     //Tile Size
-    public static float tileWidth = 0.16f;
-    public static float tileHeight = -0.08f;
+    public static float tileHalfWidth = 0.16f;
+    public static float tileHalfHeight = -0.08f;
 
     // Use this for initialization
     void Start () {
 
+        //Only one worldgen can exist
+        if(instance != null){
+            Destroy(instance);
+        }
+
         instance = this;
+        this.enabled = false;
 
         seed = Random.Range(0f, 100000f);
         generate();
@@ -51,7 +57,7 @@ public class WorldGen : MonoBehaviour {
         return (noise - waterLevel) / heightDamp;
     }
 
-    [ContextMenu("Generate")]
+    [ContextMenu("Generate")] //Can run the method by right clicking class during runtime
 	public void generate()
     {
         //Destroy All children
@@ -60,13 +66,21 @@ public class WorldGen : MonoBehaviour {
             GameObject.Destroy(child.gameObject);
         }
 
+        //Get new map created to store the tiles
+        WorldManager.instance.createNewMap(width,height);
+
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                Vector2 pos = new Vector2((-i* tileWidth) + (j* tileWidth),0 + (i * tileHeight) + (j * tileHeight));
-                float noise = Mathf.PerlinNoise(seed + pos.x, seed + pos.y);
+                float x = i * tileHalfWidth - j * tileHalfWidth;
+                float y = i * tileHalfHeight + j * tileHalfHeight;
 
+                Vector2 pos = new Vector2(x,y);
+                //Vector2 pos = new Vector2((-i* tileHalfWidth) + (j* tileHalfWidth),0 + (i * tileHalfHeight) + (j * tileHalfHeight));
+
+                float noise = Mathf.PerlinNoise(seed + pos.x, seed + pos.y);
+                
                 GameObject tile;
 
                 if (noise > waterLevel)
@@ -79,16 +93,28 @@ public class WorldGen : MonoBehaviour {
                     {
                         GameObject forestSpot = Instantiate(forest, pos, Quaternion.identity, this.transform);
                         forestSpot.GetComponent<SpriteRenderer>().size += new Vector2(0, getNoiseHeight(pos));
+                        //Add tile to map
+                        WorldManager.instance.addTile(MapTile.Type.FOREST, i, j);
+                    }
+                    else{
+                        //Add tile to map
+                        WorldManager.instance.addTile(MapTile.Type.GRASS, i, j);
                     }
                 }
                 else
                 {
                     tile = Instantiate(waterTile, pos, Quaternion.identity, this.transform);
+                    //Add tile to map
+                    WorldManager.instance.addTile(MapTile.Type.WATER, i, j);
                 }
 
 
-                //Debug.Log("Noise: " + noise);
+                //Adjust the height of the tile based on the noise height variable
+                //NOTE: Won't affect water as the tile is not set to slice, so size doesn't affect it
                 tile.GetComponent<SpriteRenderer>().size += new Vector2(0, getNoiseHeight(pos));
+
+                //Set the sorting order of tile now as it won't ever move
+                tile.GetComponent<SpriteRenderer>().sortingOrder = (int)((tile.transform.position.y * 100) * -1);
             }
         }
     }
