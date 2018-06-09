@@ -47,11 +47,26 @@ public class WorldManager : MonoBehaviour
         map[x,y] = tile;
     }
 
+    /// <summary>
+    /// Returns the tile at x and y real world coords
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
     public MapTile getTile(float x, float y){
 
         Vector2 index = worldPosToIndex(x, y);
 
-        return map[(int)index.x, (int)index.y];
+        int i1 = (int) index.x;
+        int i2 = (int) index.y;
+
+        if (i1 >= 0 && i2 >= 0 && i1 < map.GetLength(0) && i2 < map.GetLength(1)) {
+            return map[(int)index.x, (int)index.y];
+        }
+        else
+        {
+            return null;
+        }
     }
 
     private Vector2 worldPosToIndex(float x, float y)
@@ -67,7 +82,7 @@ public class WorldManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 pos = BuildingPlacer.mouseToTile();
-            Debug.Log("Tile at: (" + pos.x + "," + pos.y + ") Biome: " + getTile(pos.x, pos.y).getBiome());
+            //Debug.Log("Tile at: (" + pos.x + "," + pos.y + ") Biome: " + getTile(pos.x, pos.y).getBiome());
         }
     }
 

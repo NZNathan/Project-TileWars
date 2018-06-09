@@ -7,21 +7,25 @@ public class BuildingPlacer : MonoBehaviour
     //Components
     private SpriteRenderer spriteRenderer;
 
-	//Variables
-    public static bool placing = true;
+    //Variables
     public Building placement;
 
-    void Start(){
+    void Start()
+    {
 
-    	spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        this.enabled = false;
     }
 
     /// <summary>
 	/// Checks for user input and responds accordingly
 	/// </summary>
-    void input(){
+    void input()
+    {
 
-    	if(Input.GetMouseButtonDown(0)){
+        if (Input.GetMouseButtonDown(0))
+        {
             placeBuilding();
         }
     }
@@ -29,7 +33,8 @@ public class BuildingPlacer : MonoBehaviour
     /// <summary>
     /// Update the placement and sprite to be placed.
     /// </summary>
-    public void setPlacement(Building building){
+    public void setPlacement(Building building)
+    {
         placement = building;
         spriteRenderer.sprite = building.getSprite();
     }
@@ -38,10 +43,11 @@ public class BuildingPlacer : MonoBehaviour
     /// <summary>
     /// Places the currently selected building for placement. Returns true if successful or false if not.
     /// </summary>
-    private bool placeBuilding(){
+    private bool placeBuilding()
+    {
 
         //If the tile is valid for placement and enough resources to build, then place the building
-        if(validPlacement() && ResourceManager.instance.canAfford(placement))
+        if (validPlacement() && ResourceManager.instance.canAfford(placement) && WorldManager.instance.onMap(mouseToTile()))
         {
             Building b = Instantiate(placement, transform.position, Quaternion.identity);
 
@@ -56,9 +62,14 @@ public class BuildingPlacer : MonoBehaviour
 
             float noise = WorldGen.instance.getNoiseHeight(pos);
 
+            //Update building
             b.built();
             b.transform.position = new Vector2(pos.x, pos.y);
             b.GetComponent<SpriteRenderer>().size += new Vector2(0, noise);
+
+            //Update Tile
+            WorldManager.instance.getTile(transform.position.x, transform.position.y).buildOnTile(b);
+
             return true;
         }
 
@@ -69,9 +80,10 @@ public class BuildingPlacer : MonoBehaviour
     /// <summary>
     /// Assesses if the current tile can have a building placed onto it
     /// </summary>
-    private bool validPlacement(){
+    private bool validPlacement()
+    {
 
-        return true;
+        return WorldManager.instance.getTile(transform.position.x, transform.position.y).isBuildable();
     }
 
     /// <summary>
@@ -82,28 +94,27 @@ public class BuildingPlacer : MonoBehaviour
     {
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        pos.y += WorldGen.tileHalfHeight*3;
+        pos.y += WorldGen.tileHalfHeight * 3;
 
-        float roundXPos = Mathf.Round(pos.x / (WorldGen.tileHalfWidth * 1)) * (WorldGen.tileHalfWidth * 1); //Times 2 to account for isometric view (otherwise snaps inbetween tiles)
-        float roundYPos = Mathf.Round(pos.y / (WorldGen.tileHalfHeight * 1)) * (WorldGen.tileHalfHeight * 1);
-        //Debug.Log(roundYPos % 0.16);
-        if ((Mathf.Abs(roundYPos % 0.16f) > 0.078 && Mathf.Abs(roundYPos % 0.16f) < 0.081) && !(Mathf.Abs(roundXPos % 0.32f) > 0.158 && Mathf.Abs(roundXPos % 0.32f) < 0.161))
-        {
-            roundYPos += 0.08f;
-        }
-        else if (!(Mathf.Abs(roundYPos % 0.16f) > 0.078 && Mathf.Abs(roundYPos % 0.16f) < 0.081) && (Mathf.Abs(roundXPos % 0.32f) > 0.158 && Mathf.Abs(roundXPos % 0.32f) < 0.161))
-        {
-            roundYPos += 0.08f;
-        }
+        //Convert real world point to an index
+        float roundXPos = ((pos.x / WorldGen.tileHalfWidth + pos.y / WorldGen.tileHalfHeight) / 2);
+        float roundYPos = ((pos.y / WorldGen.tileHalfHeight - (pos.x / WorldGen.tileHalfWidth)) / 2);
 
-        return new Vector2(roundXPos, roundYPos);
-        //return new Vector2(pos.x, pos.y);
+        //Round to closest tile
+        Vector2 newPos = new Vector2(Mathf.Round(roundXPos), Mathf.Round(roundYPos));
+
+        //Convert back to real world point
+        float x = newPos.x * WorldGen.tileHalfWidth - newPos.y * WorldGen.tileHalfWidth;
+        float y = newPos.x * WorldGen.tileHalfHeight + newPos.y * WorldGen.tileHalfHeight;
+
+        return new Vector2(x, y);
     }
 
     /// <summary>
     /// Takes the mouse pos and rounds to nearest tile, taking into account noise height
     /// </summary>
-    private Vector2 roundToTile(){
+    private Vector2 roundToTile()
+    {
 
         Vector2 pos = mouseToTile();
 
@@ -115,18 +126,15 @@ public class BuildingPlacer : MonoBehaviour
     }
 
 
-    void Update ()
+    void Update()
     {
-        if(placing)
+        //Update position of the placement to snap to a tile
+        if (WorldManager.instance.onMap(mouseToTile()))
         {
-            //Update position of the placement to snap to a tile
-            if (WorldManager.instance.onMap(mouseToTile()))
-            {
-                transform.position = roundToTile();
-            }
-
-            //Call input every frame
-            input();
+            transform.position = roundToTile();
         }
+
+        //Call input every frame
+        input();
     }
 }
