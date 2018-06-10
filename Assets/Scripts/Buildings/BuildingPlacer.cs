@@ -8,7 +8,8 @@ public class BuildingPlacer : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
     //Variables
-    public Building placement;
+    private Building placement;
+    public Building[] buildings;
 
     void Start()
     {
@@ -33,10 +34,18 @@ public class BuildingPlacer : MonoBehaviour
     /// <summary>
     /// Update the placement and sprite to be placed.
     /// </summary>
-    public void setPlacement(Building building)
+    public void setPlacement(int i)
     {
-        placement = building;
-        spriteRenderer.sprite = building.getSprite();
+        placement = buildings[i];
+        spriteRenderer.sprite = buildings[i].getSprite();
+
+        this.enabled = true;
+    }
+
+    public void cancelPlacement()
+    {
+        placement = null;
+        this.enabled = false;
     }
 
 
@@ -63,8 +72,8 @@ public class BuildingPlacer : MonoBehaviour
             float noise = WorldGen.instance.getNoiseHeight(pos);
 
             //Update building
-            b.built();
             b.transform.position = new Vector2(pos.x, pos.y);
+            b.built();
             b.GetComponent<SpriteRenderer>().size += new Vector2(0, noise);
 
             //Update Tile

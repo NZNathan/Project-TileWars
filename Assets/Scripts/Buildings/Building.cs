@@ -38,6 +38,11 @@ public abstract class Building : MonoBehaviour
     #region Getters
 
     public Sprite getSprite(){
+
+        if(spriteRenderer == null)
+        {
+            Start();
+        }
         return spriteRenderer.sprite;
     }
 

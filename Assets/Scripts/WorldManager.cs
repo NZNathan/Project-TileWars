@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class WorldManager : MonoBehaviour
 {
@@ -22,6 +23,36 @@ public class WorldManager : MonoBehaviour
 
         //Don't need to run update method so no need to keep enabled
         //this.enabled = false;
+    }
+
+    /// <summary>
+    /// Get the count of the surrounding tiles that match the passed in tile type. Radius of 1 = a 3x3 grid, radius of 2 = 5x5 grid... etc.
+    /// </summary>
+    /// <param name="tileType"></param>
+    /// <param name="gridSize"></param>
+    /// <param name="pos"></param>
+    /// <returns></returns>
+    public int GetSurroundingTiles(MapTile.Type tileType, int radius, Vector2 pos)
+    {
+        int count = 0;
+        Vector2 index = worldPosToIndex(pos.x, pos.y);
+
+        Debug.Log("Tiles location: " + index.x + "," + index.y);
+
+        for (int i = (int) index.x - radius; i <= index.x + radius; i++)
+        {
+            for (int j = (int)index.y - radius; j <= index.y + radius; j++)
+            {
+                Debug.Log("Tiles location: " + i + "," + j);
+                Debug.Log("Tile: " + map[i, j].getBiome() + " Location: " + tileType);
+                if(map[i,j].getBiome() == tileType)
+                {
+                    count++;
+                }
+            }
+        }
+
+        return count;
     }
 
     public void createNewMap(int w, int h){

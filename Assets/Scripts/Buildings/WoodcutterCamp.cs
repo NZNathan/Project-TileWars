@@ -7,11 +7,14 @@ using UnityEngine;
 /// </summary>
 public class WoodcutterCamp : Building {
 
-	public int woodIncome = 10;
+	public int woodIncome = 0;
+
+    [Tooltip("How far away this camp will travel to get income from forest tiles")]
+    public int forestRange = 1;
 
 	public override void built(){
 
-		ResourceManager.instance.changeResourceBaseIncome(Resource.WOOD, woodIncome);
+		ResourceManager.instance.changeResourceBaseIncome(Resource.WOOD, WorldManager.instance.GetSurroundingTiles(MapTile.Type.FOREST, forestRange, transform.position));
 
 	}
 
