@@ -52,6 +52,12 @@ public class ResourceManager : MonoBehaviour
         resourceUI.updateText(resourceAmount, resourceBaseIncome, resourceUpkeep);
     }
 
+    public void updateUI()
+    {
+        //Update the UI
+        resourceUI.updateText(resourceAmount, resourceBaseIncome, resourceUpkeep);
+    }
+
     /// <summary>
     /// Returns true if there is enough resources to build th ebuilding passed in
     /// </summary>
@@ -75,6 +81,7 @@ public class ResourceManager : MonoBehaviour
         }
 
         resourceAmount[(int)resource] += change;
+        updateUI();
         return true;
     }
 
@@ -83,6 +90,7 @@ public class ResourceManager : MonoBehaviour
     /// </summary>
     public void changeResourceBaseIncome(Resource resource, int change){
         resourceBaseIncome[(int)resource] += change;
+        updateUI();
     }
 
     /// <summary>
@@ -96,6 +104,7 @@ public class ResourceManager : MonoBehaviour
         }
 
         resourceUpkeep[(int)resource] += change;
+        updateUI();
         return true;
     }
     #endregion

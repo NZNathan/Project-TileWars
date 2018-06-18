@@ -43,6 +43,11 @@ public class WorldManager : MonoBehaviour
         {
             for (int j = (int)index.y - radius; j <= index.y + radius; j++)
             {
+                if(i < 0 || i >= width - 1 || j < 0 || j >= height-1)
+                {
+                    continue;
+                }
+
                 Debug.Log("Tiles location: " + i + "," + j);
                 Debug.Log("Tile: " + map[i, j].getBiome() + " Location: " + tileType);
                 if(map[i,j].getBiome() == tileType)

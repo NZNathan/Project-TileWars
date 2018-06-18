@@ -45,6 +45,7 @@ public class BuildingPlacer : MonoBehaviour
     public void cancelPlacement()
     {
         placement = null;
+        spriteRenderer.sprite = null;
         this.enabled = false;
     }
 
@@ -62,9 +63,9 @@ public class BuildingPlacer : MonoBehaviour
 
             //Subtract costs
             Resource r = Resource.WOOD;
-            ResourceManager.instance.changeResourceAmount(r, b.woodCost);
+            ResourceManager.instance.changeResourceAmount(r, -b.woodCost);
             r = Resource.GOLD;
-            ResourceManager.instance.changeResourceAmount(r, b.goldCost);
+            ResourceManager.instance.changeResourceAmount(r, -b.goldCost);
 
             //To preserve correct layering must change size instead of increasing y pos, as this changes the layering calue
             Vector2 pos = mouseToTile();
